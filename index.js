@@ -1,13 +1,17 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const multer = require('multer')
-const helmet = require('helmet')
-const morgan = require('morgan')
-const path = require('path')
-const { fileURLToPath } = require('url')
+import express from'express'
+import bodyParser from'body-parser'
+import mongoose from'mongoose'
+import cors from'cors'
+import dotenv from'dotenv'
+import multer from'multer'
+import helmet from'helmet'
+import morgan from'morgan'
+import path from'path'
+import { fileURLToPath } from'url'
+import {register} from './controllers/auth.js'
+import authRoutes from './routes/auth.js'
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 const app = express();
@@ -33,6 +37,10 @@ const storage = multer.diskStorage({
 
   const upload = multer({ storage });
 
+ app.post('/auth/register', upload.single('picture'), register)
+
+ app.use("/auth", authRoutes);
+ 
   /** MONGOOSE SETUP */
 
   const port = process.env.PORT || 3000;
